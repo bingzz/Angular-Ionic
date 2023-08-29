@@ -1,0 +1,9 @@
+IONIC COMMANDS
+
+CREATE PROJECT => ionic start <project_name> <template> --type=angular
+START => ionic serve
+GENERATE => ionic generate <type> <name>
+
+
+Make sure packages are up to date => npm install -g npm-check-updates -> ncu -u -> npm install
+
