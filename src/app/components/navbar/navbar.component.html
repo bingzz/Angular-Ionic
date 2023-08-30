@@ -13,7 +13,9 @@
             name="play-circle"
             [color]="setCurrentPage('listening')"
           ></ion-icon>
-          <ion-label [color]="setCurrentPage('listening')">Listen Now</ion-label>
+          <ion-label [color]="setCurrentPage('listening')"
+            >Listen Now</ion-label
+          >
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle autoHide="false">
@@ -48,7 +50,11 @@
       </ion-menu-toggle>
       <ion-menu-toggle autoHide="false">
         <ion-item button (click)="logout()">
-          <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+          <ion-icon
+            slot="start"
+            name="log-out-outline"
+            color="danger"
+          ></ion-icon>
           <ion-label color="danger">Logout</ion-label>
         </ion-item>
       </ion-menu-toggle>

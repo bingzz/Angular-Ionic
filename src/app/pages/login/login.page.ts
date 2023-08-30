@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -10,21 +10,16 @@ import { Router } from '@angular/router';
 export class LoginPage implements OnInit {
   loginForm: FormGroup
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
-    })
+  constructor(private userService: UserService) {
+    this.loginForm = userService.loginForm
   }
 
   onSubmit() {
-    if (!this.loginForm.value) return
-
-    this.router.navigate(['/home'])
+    this.userService.login()
   }
 
-  clear() {
-    this.loginForm.reset()
+  async clear() {
+    this.userService.resetForm()
   }
 
   ngOnInit() {

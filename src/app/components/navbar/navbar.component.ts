@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,8 +10,9 @@ import { filter, map } from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
   activePage: string
+  loadingDuration = 2000
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     this.activePage = router.url.split('/').pop() ?? ''
   }
 
@@ -26,8 +28,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    // Clear cache
-    this.router.navigate(['/'])
+    this.userService.logoutAlert()
   }
 
   ngOnInit() {
