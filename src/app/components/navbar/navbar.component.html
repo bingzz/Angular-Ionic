@@ -1,35 +1,58 @@
 <ion-menu contentId="main-content">
-  <ion-header>
+  <ion-header translucent="true">
     <ion-toolbar>
-      <ion-title>Side Menu</ion-title>
+      <ion-title>Options</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    <ion-menu-toggle autoHide="false">
-      <ion-button expand="block" fill="clear">
-        <ion-icon slot="start" name="play-circle" color="dark"></ion-icon>
-        Listen Now
-      </ion-button>
-      <ion-button expand="block" fill="clear">
-        <ion-icon slot="start" name="radio" color="dark"></ion-icon>
-        Radio
-      </ion-button>
-      <ion-button expand="block" fill="clear">
-        <ion-icon slot="start" name="library" color="dark"></ion-icon>
-        Library
-      </ion-button>
-      <ion-button expand="block" fill="clear">
-        <ion-icon slot="start" name="search" color="dark"></ion-icon>
-        Search
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="danger"
-        fill="outline"
-        (click)="logout()"
-        >Logout
-      </ion-button>
-    </ion-menu-toggle>
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle autoHide="false">
+        <ion-item button (click)="navigateToPage('listening')">
+          <ion-icon
+            slot="start"
+            name="play-circle"
+            [color]="setCurrentPage('listening')"
+          ></ion-icon>
+          <ion-label [color]="setCurrentPage('listening')">Listen Now</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle autoHide="false">
+        <ion-item button (click)="navigateToPage('radio')">
+          <ion-icon
+            slot="start"
+            name="radio"
+            [color]="setCurrentPage('radio')"
+          ></ion-icon>
+          <ion-label [color]="setCurrentPage('radio')">Radio</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle autoHide="false">
+        <ion-item button (click)="navigateToPage('library')">
+          <ion-icon
+            slot="start"
+            name="library"
+            [color]="setCurrentPage('library')"
+          ></ion-icon>
+          <ion-label [color]="setCurrentPage('library')">Library</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle autoHide="false">
+        <ion-item button (click)="navigateToPage('search')">
+          <ion-icon
+            slot="start"
+            name="search"
+            [color]="setCurrentPage('search')"
+          ></ion-icon>
+          <ion-label [color]="setCurrentPage('search')">Search</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle autoHide="false">
+        <ion-item button (click)="logout()">
+          <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+          <ion-label color="danger">Logout</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
   </ion-content>
 </ion-menu>
 <div class="ion-page" id="main-content">

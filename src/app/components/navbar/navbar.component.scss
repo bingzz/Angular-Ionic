@@ -1,9 +1,14 @@
-ion-content {
-  ion-menu-toggle {
-    ion-button {
-      display: flex;
-      justify-content: start;
+// ion-content {
+//   ion-menu-toggle {
+//     ion-button {
+//       display: flex;
+//       justify-content: start;
+//     }
+//   }
+// }
 
-    }
+ion-list.menu-options {
+  ion-menu-toggle {
+    width: 100%;
   }
 }
