@@ -1,8 +1,60 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>Search</ion-title>
-  </ion-toolbar>
-</ion-header> -->
 <ion-content>
-  <div class="example-content">Search content</div>
+  <ion-header class="sticky-searchbar">
+    <ion-toolbar>
+      <ion-searchbar debounce="500" (ionInput)="handleInput($event)"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-reorder-group disabled="false" (ionItemReorder)="handleReorder($any($event))">
+      <ion-reorder *ngFor="let item of results; let index">
+        <ion-item button>
+          <ion-label>{{ item }}</ion-label>
+        </ion-item>
+      </ion-reorder>
+      <!-- <ion-item button *ngFor="let item of results; let index">
+        <ion-label>{{ item }}</ion-label>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item> -->
+    </ion-reorder-group>
+    <ion-item *ngIf="notFound">
+      <ion-label class="ion-text-center">Not Found</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button id="open-modal" expand="block">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelModal()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Add Song to the List</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirmModal()" strong="true">Add</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-item>
+          <ion-label position="stacked">Enter Song name</ion-label>
+          <ion-input type="text" label="Name" placeholder="Song" [(ngModel)]="name"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
