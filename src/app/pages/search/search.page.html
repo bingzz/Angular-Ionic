@@ -8,19 +8,42 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
+
     <ion-reorder-group disabled="false" (ionItemReorder)="handleReorder($any($event))">
+      <ion-item-sliding *ngFor="let item of results; let i = index" (ionSwipe)="deleteSwipe(item, i)"
+        (click)="deleteSwipe(item, i)">
+        <ion-item button>
+          <ion-label>{{ item }}</ion-label>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+        <ion-item-options side="start">
+          <ion-item-option color="danger" expandable>
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-reorder-group>
+
+    <!-- <ion-reorder-group disabled="false" (ionItemReorder)="handleReorder($any($event))">
       <ion-reorder *ngFor="let item of results; let index">
         <ion-item button>
           <ion-label>{{ item }}</ion-label>
         </ion-item>
       </ion-reorder>
-      <!-- <ion-item button *ngFor="let item of results; let index">
+      <ion-item button *ngFor="let item of results; let index">
         <ion-label>{{ item }}</ion-label>
         <ion-reorder slot="end"></ion-reorder>
-      </ion-item> -->
-    </ion-reorder-group>
-    <ion-item *ngIf="notFound">
+      </ion-item>
+      <ion-item-options side="start">
+        <ion-item-option color="danger" expandable>Remove</ion-item-option>
+      </ion-item-options>
+    </ion-reorder-group> -->
+
+    <ion-item *ngIf="results.length && notFound">
       <ion-label class="ion-text-center">Not Found</ion-label>
+    </ion-item>
+    <ion-item *ngIf="!results.length">
+      <ion-label class="ion-text-center">No list found</ion-label>
     </ion-item>
   </ion-list>
   <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
@@ -28,9 +51,12 @@
   </ion-infinite-scroll>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
+      <ion-icon name="list-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
+      <ion-fab-button id="open-action-sheet" [show]="results.length">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-fab-button>
       <ion-fab-button id="open-modal" expand="block">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
@@ -57,4 +83,6 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+  <ion-action-sheet trigger="open-action-sheet" [header]="actionSheetHeader"
+    [buttons]="actionSheetButtons"></ion-action-sheet>
 </ion-content>

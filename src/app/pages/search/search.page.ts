@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import { InfiniteScrollCustomEvent, IonModal, ItemReorderEventDetail, RefresherCustomEvent, ToastController } from '@ionic/angular'
+import { AlertController, InfiniteScrollCustomEvent, IonModal, ItemReorderEventDetail, LoadingController, RefresherCustomEvent, ToastController } from '@ionic/angular'
 import { OverlayEventDetail } from '@ionic/core'
 
 @Component({
@@ -15,13 +15,51 @@ export class SearchPage implements OnInit {
   @ViewChild(IonModal) modal!: IonModal
   name: string = ''
 
-  constructor (private toastController: ToastController) { }
+  actionSheetHeader = 'Do you want to remove all from the list?'
+  actionSheetButtons = [
+    {
+      text: 'Remove All',
+      role: 'destructive',
+      handler: async () => {
+        const loading = await this.loadingController.create({
+          spinner: 'circles',
+          message: 'Removing all items',
+          translucent: true,
+          backdropDismiss: false,
+        })
+        const alert = await this.alertController.create({
+          header: 'Cleared',
+          message: 'Cleared all lists',
+          buttons: [
+            {
+              text: 'OK',
+              role: 'cancel'
+            }
+          ]
+        })
+
+        loading.present()
+
+        setTimeout(() => {
+          this.items = []
+          this.results = []
+          loading.dismiss()
+          alert.present()
+        }, 2000)
+      }
+    },
+    {
+      text: 'Cancel',
+      role: 'cancel'
+    }
+  ]
+
+  constructor (private toastController: ToastController, private loadingController: LoadingController, private alertController: AlertController) { }
 
   private generateItems() {
     const count = this.items.length + 1
-    for (let i = 0; i < 50; i++) {
-      const randomNumber = (Math.random() * i + count).toFixed(0)
-      this.items.push(`Song ${randomNumber}`)
+    for (let i = 0; i < 20; i++) {
+      this.items.push(`Item ${count + i}`)
     }
 
     this.results = [...this.items]
@@ -90,14 +128,34 @@ export class SearchPage implements OnInit {
     this.name = ''
   }
 
-  onWillDismiss(event: Event) {
+  async onWillDismiss(event: Event) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>
+    const loading = await this.loadingController.create({
+      spinner: 'circles',
+      message: 'Adding to the list...',
+      translucent: true,
+      backdropDismiss: false,
+    })
+    const toast = await this.toastController.create(({
+      message: 'Added!',
+      duration: 2000,
+      position: 'bottom'
+    }))
 
     if (ev.detail.role === 'confirm' && !!ev.detail.data) {
-      // this.name = ev.detail.data
-      // console.log('added', ev.detail.data)
-      this.results.unshift(ev.detail.data)
+      await loading.present()
+
+      setTimeout(async () => {
+        await toast.present()
+        loading.dismiss()
+        this.results.unshift(ev.detail.data as string)
+      }, 2000)
     }
+  }
+
+  deleteSwipe(item: string, index: number) {
+    console.log('Removed', item, 'at index', index)
+    this.results.splice(index, 1)
   }
 
   ngOnInit() {
