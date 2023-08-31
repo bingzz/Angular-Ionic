@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 
 // Components
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavbarComponent } from './components/navbar/navbar.component'
 
 const routes: Routes = [
   {
@@ -36,8 +36,8 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
-  },
-];
+  }
+]
 
 @NgModule({
   imports: [

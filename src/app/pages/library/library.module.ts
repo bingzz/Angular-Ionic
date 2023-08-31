@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular'
 
-import { LibraryPageRoutingModule } from './library-routing.module';
+import { LibraryPageRoutingModule } from './library-routing.module'
 
-import { LibraryPage } from './library.page';
-import { RouterModule } from '@angular/router';
+import { LibraryPage } from './library.page'
+import { RouterModule } from '@angular/router'
 
 @NgModule({
   imports: [
@@ -20,7 +20,11 @@ import { RouterModule } from '@angular/router';
       {
         path: '',
         component: LibraryPage
-      }
+      },
+      {
+        path: ':album',
+        loadChildren: () => import('../album-playlist/album-playlist.module').then(m => m.AlbumPlaylistPageModule)
+      },
     ])
   ],
   declarations: [LibraryPage]
