@@ -2,11 +2,16 @@
   <h1 class="ion-padding">Log In User Page</h1>
   <div class="login-form">
     <form [formGroup]="loginForm" (submit)="onSubmit()" ion-tab-focus>
-      <ion-input label="Username" labelPlacement="floating" clearInput="true" formControlName="username"></ion-input>
-      <ion-input label="Password" type="password" labelPlacement="floating" clearInput="true"
+      <ion-input label="Username" labelPlacement="floating" formControlName="username"></ion-input>
+      <ion-input label="Password" type="password" labelPlacement="floating"
         formControlName="password"></ion-input>
       <ion-button expand="block" type="submit" fill="outline" [disabled]="!loginForm.valid">Log In</ion-button>
       <ion-button expand="full" buttonType="button" fill="clear" (click)="clear()">Clear</ion-button>
     </form>
   </div>
 </ion-content>
+<ion-footer translucent="true">
+  <ion-toolbar>
+    <ion-button fill="outline" (click)="register()">Register</ion-button>
+  </ion-toolbar>
+</ion-footer>

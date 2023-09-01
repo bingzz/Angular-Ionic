@@ -22,4 +22,7 @@ export class LoginPage {
     this.userService.resetForm()
   }
 
+  register() {
+    this.userService.register()
+  }
 }

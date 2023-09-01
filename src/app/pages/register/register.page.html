@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Register User</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="registerForm" (submit)="register()">
+
+    <ion-item lines="full">
+      <ion-input tabindex="1" type="email" labelPlacement="floating" label="Email" formControlName="email"></ion-input>
+    </ion-item>
+    <div *ngIf="errorControl['email'].touched && errorControl['email'].invalid">
+      <div class="ion-padding" *ngIf="errorControl['email'].errors?.['required']">
+        <ion-text color="danger">Email is required.</ion-text>
+      </div>
+      <div class="ion-padding" *ngIf="errorControl['email'].errors?.['pattern']">
+        <ion-text color="danger">Provide a valid Email.</ion-text>
+      </div>
+    </div>
+
+    <ion-item lines="full">
+      <ion-input tabindex="2" type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
+    </ion-item>
+    <div *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
+      <div class="ion-padding" *ngIf="errorControl['username'].errors?.['required']">
+        <ion-text color="danger">Username is required.</ion-text>
+      </div>
+      <div class="ion-padding" *ngIf="registerForm.get('username')?.errors?.['minlength']">
+        <ion-text color="danger">Username must be 3 characters long.</ion-text>
+      </div>
+    </div>
+
+    <ion-item lines="full">
+      <ion-input tabindex="3" type="password" label="Password" labelPlacement="floating" formControlName="password"></ion-input>
+    </ion-item>
+    <div *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
+      <div class="ion-padding" *ngIf="errorControl['password'].errors?.['required']">
+        <ion-text color="danger">Password is required.</ion-text>
+      </div>
+      <div class="ion-padding" *ngIf="registerForm.get('password')?.errors?.['minlength']">
+        <ion-text color="danger">Password must be 8 characters long.</ion-text>
+      </div>
+    </div>
+
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" color="primary" expand="block">Submit</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

@@ -1,20 +1,25 @@
-import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { Injectable } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular'
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   loginForm: FormGroup
+
   loadingDuration = 2000
 
-  constructor(private formBuilder: FormBuilder, private navController: NavController, private alertController: AlertController, private loadingController: LoadingController, private toastController: ToastController) {
+  constructor (private formBuilder: FormBuilder, private navController: NavController, private alertController: AlertController, private loadingController: LoadingController, private toastController: ToastController) {
+
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     })
+  }
+
+  async register() {
+    this.navController.navigateForward('/register')
   }
 
   async resetForm() {
@@ -84,7 +89,7 @@ export class UserService {
 
               this.navController.navigateBack('/')
               // this.router.navigate(['/'])
-            }, this.loadingDuration);
+            }, this.loadingDuration)
           }
         }
       ]
