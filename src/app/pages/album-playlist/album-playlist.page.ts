@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { AsyncService } from 'src/app/services/async.service'
 
 @Component({
   selector: 'app-album-playlist',
@@ -27,8 +28,9 @@ export class AlbumPlaylistPage implements OnInit {
   albumImg: string = ''
   basePlaylist: string[] = []
   playlist: string[] = []
+  notFound: boolean = false
 
-  constructor (private activatedRoute: ActivatedRoute) {
+  constructor (private activatedRoute: ActivatedRoute, private asyncService: AsyncService) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.albumName = params['name']
       this.albumImg = params['img']
@@ -36,25 +38,16 @@ export class AlbumPlaylistPage implements OnInit {
   }
 
   generatePlaylist() {
-    this.basePlaylist = []
-
-    const randomNumber = Math.floor(Math.random() * 46) + 5
-
-    for (let i = 1; i <= randomNumber; i++ ) {
-      this.basePlaylist.push(`Song ` + i)
-    }
-
-    this.playlist = this.basePlaylist
+    this.asyncService.generateList(this.basePlaylist, this.playlist, 'song')
   }
 
   filterSongs(event: Event) {
     const value = (event.target as HTMLInputElement).value.toLowerCase().trim() ?? ''
 
-    this.playlist = this.basePlaylist.filter(song => song.toLowerCase().indexOf(value) > -1)
+    this.asyncService.filterList(this.basePlaylist, this.playlist, value, this.notFound)
   }
 
   ngOnInit() {
-
     this.generatePlaylist()
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { RefresherCustomEvent } from '@ionic/angular'
+import { Album } from 'src/app/models/models'
 import { AsyncService } from 'src/app/services/async.service'
 
 @Component({
@@ -16,7 +17,6 @@ export class LibraryPage implements OnInit {
   constructor (private asyncService: AsyncService, private router: Router) { }
 
   generateAlbums() {
-    this.baseAlbums = []
     const count = this.baseAlbums.length + 1
 
     for (let i = 0; i < 20; i++) {
@@ -67,10 +67,4 @@ export class LibraryPage implements OnInit {
   ngOnInit(): void {
     this.generateAlbums()
   }
-}
-
-interface Album {
-  id: string,
-  name: string,
-  img: string
 }

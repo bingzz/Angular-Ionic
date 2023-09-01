@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core'
 import { AlertController, InfiniteScrollCustomEvent, ItemReorderEventDetail, LoadingController, RefresherCustomEvent, ToastController } from '@ionic/angular'
-import { OverlayEventDetail } from '@ionic/core'
+
+interface AlertButtons {
+  text: string,
+  role: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +13,35 @@ export class AsyncService {
 
   constructor (private toastController: ToastController, private loadingController: LoadingController, private alertController: AlertController) { }
 
-  refreshList(event: Event) {
+  generateList(mainList: string[], list: string[], type: string) {
+    const randomNumber = Math.floor(Math.random() * 46) + 5
+
+    mainList.length = 0
+
+    for (let i = 1; i <= randomNumber; i++) {
+      mainList.push(`${type.toUpperCase()} ${i}`)
+    }
+
+    list.push(...mainList)
+  }
+
+  filterList(mainList: string[], list: string[], searchString: string, existing: boolean) {
+    list.length = 0
+
+    list.push(...mainList.filter(item => item.toLowerCase().indexOf(searchString) > -1))
+
+    existing = list.length === 0
+  }
+
+  refreshList(mainList: string[], list: string[], name: string, event: Event) {
     const ev = event as RefresherCustomEvent
 
     setTimeout(() => {
-      console.log('List Refreshed');
+      list.length = 0
+      this.generateList(mainList, list, name)
 
       ev.target.complete()
-    }, 2000);
+    }, 2000)
   }
 
   deleteItem() {
@@ -28,10 +53,6 @@ export class AsyncService {
   }
 
   infiniteScroll(event: CustomEvent<InfiniteScrollCustomEvent>) {
-
-  }
-
-  async addItem(event: CustomEvent<OverlayEventDetail<string>>) {
 
   }
 
@@ -59,9 +80,4 @@ export class AsyncService {
       backdropDismiss: false
     }))
   }
-}
-
-interface AlertButtons {
-  text: string,
-  role: string
 }

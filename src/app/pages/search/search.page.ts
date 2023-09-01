@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { AlertController, InfiniteScrollCustomEvent, IonModal, ItemReorderEventDetail, LoadingController, RefresherCustomEvent, ToastController } from '@ionic/angular'
 import { OverlayEventDetail } from '@ionic/core'
+import { AsyncService } from 'src/app/services/async.service'
 
 @Component({
   selector: 'app-search',
@@ -8,8 +9,8 @@ import { OverlayEventDetail } from '@ionic/core'
   styleUrls: ['./search.page.scss'],
 })
 export class SearchPage implements OnInit {
-  items: string[] = [];
-  results: string[] = [];
+  baseSongs: string[] = [];
+  songs: string[] = [];
   notFound: boolean = false;
 
   @ViewChild(IonModal) modal!: IonModal
@@ -41,8 +42,8 @@ export class SearchPage implements OnInit {
         loading.present()
 
         setTimeout(() => {
-          this.items = []
-          this.results = []
+          this.songs = []
+          this.baseSongs = []
           loading.dismiss()
           alert.present()
         }, 2000)
@@ -54,39 +55,26 @@ export class SearchPage implements OnInit {
     }
   ]
 
-  constructor (private toastController: ToastController, private loadingController: LoadingController, private alertController: AlertController) { }
+  constructor (private toastController: ToastController, private loadingController: LoadingController, private alertController: AlertController, private asyncService: AsyncService) { }
 
-  private generateItems() {
-    const count = this.items.length + 1
-    for (let i = 0; i < 20; i++) {
-      this.items.push(`Item ${count + i}`)
-    }
-
-    this.results = [...this.items]
+  generateList() {
+    this.asyncService.generateList(this.baseSongs, this.songs, 'Song')
   }
 
-  handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
+  refreshList(event: Event) {
+    this.asyncService.refreshList(this.baseSongs, this.songs, 'Song', event)
+  }
+
+  reorderList(ev: CustomEvent<ItemReorderEventDetail>) {
     const fromIndex = ev.detail.from
     const toIndex = ev.detail.to
 
-    const value = this.results.splice(fromIndex, 1)[0]
-    this.results.splice(toIndex, 0, value)
+    const value = this.songs.splice(fromIndex, 1)[0]
+    this.songs.splice(toIndex, 0, value)
 
     console.log('Dragged', value, 'from index', fromIndex, 'to', toIndex)
 
     ev.detail.complete()
-  }
-
-  handleRefresh(event: Event) {
-    const ev = event as RefresherCustomEvent
-
-    setTimeout(() => {
-      console.log('List refreshed')
-
-      this.items = []
-      this.generateItems()
-      ev.target.complete()
-    }, 1500)
   }
 
   onIonInfinite(event: Event) {
@@ -95,17 +83,15 @@ export class SearchPage implements OnInit {
     setTimeout(() => {
       console.log('Generate List')
 
-      this.generateItems()
+      this.generateList()
       ev.target.complete()
     }, 500)
   }
 
-  handleInput(ev: Event) {
-    const query = (ev.target as HTMLInputElement).value.toLowerCase().trim() ?? ''
+  searchList(ev: Event) {
+    const search = (ev.target as HTMLInputElement).value.toLowerCase().trim() ?? ''
 
-    this.results = this.items.filter((item) => item.toLowerCase().indexOf(query) > -1)
-
-    this.notFound = this.results.length === 0
+    this.asyncService.filterList(this.baseSongs, this.songs, search, this.notFound)
   }
 
   cancelModal() {
@@ -145,21 +131,21 @@ export class SearchPage implements OnInit {
     if (ev.detail.role === 'confirm' && !!ev.detail.data) {
       await loading.present()
 
-      setTimeout(async () => {
-        await toast.present()
-        loading.dismiss()
-        this.results.unshift(ev.detail.data as string)
-      }, 2000)
+      // setTimeout(async () => {
+      //   await toast.present()
+      //   loading.dismiss()
+      //   this.results.unshift(ev.detail.data as string)
+      // }, 2000)
     }
   }
 
   deleteSwipe(item: string, index: number) {
     console.log('Removed', item, 'at index', index)
-    this.results.splice(index, 1)
+    // this.results.splice(index, 1)
   }
 
   ngOnInit() {
-    this.generateItems()
+    this.generateList()
   }
 
 }
