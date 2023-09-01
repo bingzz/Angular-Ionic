@@ -1,13 +1,37 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>albumPlaylist</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ albumName }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">albumPlaylist</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="center-img ion-padding-top">
+    <ion-skeleton-text animated="true" class="loading-img" *ngIf="!albumImg"></ion-skeleton-text>
+    <ion-img slot="center" [src]="albumImg" [alt]="albumName" *ngIf="albumImg"></ion-img>
+  </div>
+  <ion-text class="ion-text-center ion-padding-top">
+    <h1>{{ albumName }}</h1>
+  </ion-text>
+  <div class="search-toolbar">
+    <ion-searchbar placeholder="Search Songs" debounce="300" (ionInput)="filterSongs($event)"></ion-searchbar>
+    <ion-button fill="outline" size="small" id="open-sort-sheet">Sort</ion-button>
+  </div>
 </ion-content>
+
+<ion-content class="ion-padding-horizontal">
+  <div class="list-scrollable">
+    <ion-list>
+      <ion-item button *ngFor="let song of playlist">
+        <ion-label>{{ song }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="!playlist.length">
+        <ion-label class="ion-text-center">No Songs found</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-action-sheet trigger="open-sort-sheet" [header]="actionHeader" [buttons]="actionButtons"></ion-action-sheet>

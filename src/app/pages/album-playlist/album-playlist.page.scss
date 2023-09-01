@@ -1,0 +1,23 @@
+.center-img {
+  display: flex;
+  justify-content: center;
+}
+
+.search-toolbar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.container {
+  margin-bottom: 0.5rem;
+}
+
+.list-scrollable {
+  position: relative;
+  overflow-y: auto;
+}
+
+ion-skeleton-text.loading-img {
+  height: 150px;
+  width: 150px;
+}

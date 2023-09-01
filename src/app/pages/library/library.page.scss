@@ -3,3 +3,17 @@
   top: 0;
   z-index: 100;
 }
+
+ion-list.album-list {
+  ion-skeleton-text.album-img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+ion-item {
+  ion-img {
+    height: 80px;
+    width: 80px;
+  }
+}

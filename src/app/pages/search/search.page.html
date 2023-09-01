@@ -1,8 +1,7 @@
-<ion-content>
+<ion-content class="ion-padding">
+  <h1>Search Songs</h1>
   <ion-header class="sticky-searchbar">
-    <ion-toolbar>
-      <ion-searchbar debounce="500" (ionInput)="handleInput($event)"></ion-searchbar>
-    </ion-toolbar>
+    <ion-searchbar placeholder="Search all songs" debounce="300" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-header>
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>

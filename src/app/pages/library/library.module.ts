@@ -21,10 +21,6 @@ import { RouterModule } from '@angular/router'
         path: '',
         component: LibraryPage
       },
-      {
-        path: ':album',
-        loadChildren: () => import('../album-playlist/album-playlist.module').then(m => m.AlbumPlaylistPageModule)
-      },
     ])
   ],
   declarations: [LibraryPage]

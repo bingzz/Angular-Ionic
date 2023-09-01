@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: LibraryPage
-  }
+  },
+  {
+    path: ':album',
+    loadChildren: () => import('../album-playlist/album-playlist.module').then(m => m.AlbumPlaylistPageModule)
+  },
 ];
 
 @NgModule({

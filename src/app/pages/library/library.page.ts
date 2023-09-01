@@ -9,22 +9,25 @@ import { AsyncService } from 'src/app/services/async.service'
   styleUrls: ['./library.page.scss'],
 })
 export class LibraryPage implements OnInit {
-  albums: Albums[] = []
+  baseAlbums: Album[] = []
+  albums: Album[] = []
   notFound: boolean = false
 
   constructor (private asyncService: AsyncService, private router: Router) { }
 
   generateAlbums() {
-    this.albums = []
-    const count = this.albums.length + 1
+    this.baseAlbums = []
+    const count = this.baseAlbums.length + 1
 
     for (let i = 0; i < 20; i++) {
-      this.albums.push({
-        id: count + i,
+      this.baseAlbums.push({
+        id: `${count + i}`,
         name: 'Album ' + (count + i),
-        img: 'https://picsum.photos/80/80?random=' + i
+        img: 'https://picsum.photos/150/150?random=' + i
       })
     }
+
+    this.albums = this.baseAlbums
   }
 
   refreshAlbums(event: Event) {
@@ -38,15 +41,19 @@ export class LibraryPage implements OnInit {
     }, 1500)
   }
 
-  filterAlbums() {
+  filterAlbums(event: Event) {
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim() ?? ''
 
+    this.albums = this.baseAlbums.filter(album => album.name.toLowerCase().indexOf(value) > -1)
   }
 
-  selectAlbum(albumId: number) {
+  selectAlbum(album: Album) {
     // redirect to this url /home/library/<album_name>
-    if (!albumId) return
+    if (!Object.keys(album).length) return
 
-    this.router.navigate(['/home/library/', albumId])
+    this.router.navigate(['/home/library/', `${album.id}/`], {
+      queryParams: album
+    })
   }
 
   deleteAlbum(album: string) {
@@ -62,8 +69,8 @@ export class LibraryPage implements OnInit {
   }
 }
 
-interface Albums {
-  id: number,
+interface Album {
+  id: string,
   name: string,
   img: string
 }
