@@ -9,8 +9,31 @@ h1 {
   margin-top: 4rem;
 
   form {
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 1rem;
     border: 1px solid gray;
+  }
+}
+
+ion-backdrop {
+  background-color: #000;
+  opacity: 0.4;
+}
+
+form {
+
+  ion-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .error-msg {
+    height: 1.2rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+
+    ion-text {
+      position: absolute;
+      left: 1rem;
+    }
   }
 }

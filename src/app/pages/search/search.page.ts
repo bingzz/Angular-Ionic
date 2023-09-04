@@ -141,7 +141,7 @@ export class SearchPage implements OnInit {
 
   deleteSwipe(item: string, index: number) {
     console.log('Removed', item, 'at index', index)
-    // this.results.splice(index, 1)
+    this.songs.splice(index, 1)
   }
 
   ngOnInit() {

@@ -14,11 +14,15 @@ export class LoginPage {
     this.loginForm = userService.loginForm
   }
 
+  get errorControl() {
+    return this.loginForm.controls
+  }
+
   onSubmit() {
     this.userService.login()
   }
 
-  async clear() {
+  clear() {
     this.userService.resetForm()
   }
 

@@ -28,12 +28,13 @@ export class RegisterPage {
   }
 
   register() {
-    // if (!this.registerForm.valid) {
-    //   console.log('Incorrect values')
-    //   return
-    // }
+    if (!this.registerForm.valid) {
+      console.log('Incorrect values')
+      return
+    }
 
     console.log(this.registerForm.value)
+    this.userService.submitRegistration()
   }
 
 }
