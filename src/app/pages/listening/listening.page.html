@@ -1,3 +1,37 @@
 <ion-content class="ion-padding">
+  <div class="container">
+    <div class="song-details">
+      <div class="cover">
+        <img [src]="imgSrc" alt="" />
+      </div>
+      <div class="title">
+        <h1>{{ songTitle }}</h1>
+      </div>
+    </div>
+    <div class="song-options">
+      <div class="seeker">
+        <div class="timer">
+          <div class="start">{{ startTime | timer }}</div>
+          <div class="end">{{ endTime | timer }}</div>
+        </div>
+        <ion-range labelPlacement="start" [max]="endTime" [value]="startTime" (ionInput)="seekSong($event)"
+          (ionKnobMoveStart)="moveSliderStart()" (ionKnobMoveEnd)="moveSliderEnd()"></ion-range>
+      </div>
+      <div class="media">
+        <ion-button fill="none" color="dark" (click)="shuffle()"><ion-icon name="shuffle-outline"
+            [color]="onShuffle ? 'primary' : 'dark'"></ion-icon></ion-button>
+        <ion-button fill="none" color="dark" (click)="prevSong()"><ion-icon
+            name="play-skip-back-outline"></ion-icon></ion-button>
+        <ion-button color="none" (click)="playPause()" *ngIf="!paused"><ion-icon name="play-outline"
+            color="primary"></ion-icon></ion-button>
+        <ion-button fill="none" color="dark" (click)="playPause()" *ngIf="paused"><ion-icon
+            name="pause-outline"></ion-icon></ion-button>
+        <ion-button fill="none" color="dark" (click)="nextSong()"><ion-icon
+            name="play-skip-forward-outline"></ion-icon></ion-button>
+        <ion-button fill="none" color="dark" (click)="repeat()"><ion-icon name="repeat-outline"
+            [color]="onRepeat ? 'primary' : 'dark'"></ion-icon></ion-button>
+      </div>
+    </div>
+  </div>
 
 </ion-content>

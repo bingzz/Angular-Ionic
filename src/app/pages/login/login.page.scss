@@ -7,12 +7,6 @@ h1 {
   justify-content: center;
   align-items: center;
   margin-top: 4rem;
-
-  form {
-    padding: 1rem;
-    border-radius: 1rem;
-    border: 1px solid gray;
-  }
 }
 
 ion-backdrop {
@@ -21,6 +15,9 @@ ion-backdrop {
 }
 
 form {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #2d2d2d;
 
   ion-item {
     margin-bottom: 0.5rem;
@@ -36,4 +33,9 @@ form {
       left: 1rem;
     }
   }
+}
+
+.register-container {
+  text-align: center;
+  margin-top: 0.8rem;
 }

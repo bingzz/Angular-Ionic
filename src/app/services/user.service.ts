@@ -79,15 +79,15 @@ export class UserService {
       setTimeout(() => {
         this.router.navigate(['/home']).then(() => loading.dismiss())
       }, this.loadingDuration)
-    }).catch(async (err) => {
-      const alert = await this.alertController.create({
+    }).catch((err) => {
+      this.alertController.create({
         header: 'Login Failed',
         message: 'Failed to Log In',
         buttons: ['OK']
+      }).then(alert => {
+        alert.present()
+        console.error(err)
       })
-
-      console.error(err)
-      alert.present()
     })
   }
 

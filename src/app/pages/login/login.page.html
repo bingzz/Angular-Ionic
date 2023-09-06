@@ -7,22 +7,22 @@
           <ion-input type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
         </ion-item>
         <div class="error-msg" *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
-          <ion-text color="danger" *ngIf="errorControl['username'].errors?.['required']">Username is required.</ion-text>
+          <ion-text color="danger" *ngIf="errorControl['username'].errors?.['required']">Username is
+            required.</ion-text>
         </div>
         <ion-item lines="full">
           <ion-input label="Password" type="password" labelPlacement="floating" formControlName="password"></ion-input>
         </ion-item>
         <div class="error-msg" *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
-          <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">Password is required.</ion-text>
+          <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">Password is
+            required.</ion-text>
         </div>
         <ion-button expand="block" type="submit" fill="outline" [disabled]="!loginForm.valid">Log In</ion-button>
         <ion-button expand="full" buttonType="button" fill="clear" (click)="clear()">Clear</ion-button>
       </form>
     </div>
+    <div class="register-container">
+      <ion-button fill="outline" (click)="register()" id="open-loading" color="primary">Register</ion-button>
+    </div>
   </ion-content>
-  <ion-footer translucent="true">
-    <ion-toolbar>
-      <ion-button fill="outline" (click)="register()" id="open-loading">Register</ion-button>
-    </ion-toolbar>
-  </ion-footer>
 </div>

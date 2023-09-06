@@ -24,21 +24,3 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-
-.example-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-ion-grid {
-  width: 100%;
-
-  ion-col {
-    background-color: #135d54;
-    border: solid 1px #fff;
-    color: #fff;
-    text-align: center;
-  }
-}

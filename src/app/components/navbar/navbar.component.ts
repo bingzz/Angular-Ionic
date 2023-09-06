@@ -3,6 +3,12 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 
+interface Nav {
+  navigate: string
+  name: string
+  title: string
+}
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -11,6 +17,29 @@ import { UserService } from 'src/app/services/user.service';
 export class NavbarComponent implements OnInit {
   activePage: string
   loadingDuration = 2000
+
+  navigation: Nav[] = [
+    {
+      navigate: 'listening',
+      name: 'play-circle',
+      title: 'Listen Now'
+    },
+    {
+      navigate: 'radio',
+      name: 'radio',
+      title: 'Radio'
+    },
+    {
+      navigate: 'library',
+      name: 'library',
+      title: 'Library'
+    },
+    {
+      navigate: 'search',
+      name: 'search',
+      title: 'Search'
+    },
+  ]
 
   constructor(private router: Router, private userService: UserService) {
     this.activePage = router.url.split('/').pop() ?? ''
