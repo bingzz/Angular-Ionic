@@ -1,7 +1,8 @@
 import express from 'express'
 import http from 'http'
 import { Server, Socket } from 'socket.io'
-import cors from 'cors'
+import { errorHandler, loggingHandler } from './handlers/handlers'
+import router from './routes/routes'
 
 const port = 3000
 const app = express()
@@ -14,10 +15,22 @@ const socket = new Server(server, {
 })
 
 app.use(express.json())
+app.use('/api', router)
+app.use(loggingHandler)
+app.use(errorHandler)
+
+server.setTimeout(1000)
 
 socket.on('connection', (socket: Socket) => {
   console.log('Connection Established')
-  
+
+  socket.on('login', (user) => {
+    console.log(user)
+  })
+})
+
+server.on('error', (error) => {
+
 })
 
 server.listen(port, () => {

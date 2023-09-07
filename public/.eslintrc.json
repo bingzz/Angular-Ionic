@@ -6,6 +6,8 @@
       "files": ["*.ts"],
       "parserOptions": {
         "project": ["tsconfig.json"],
+        "sourceType": "module",
+        "tsconfigRootDir": "C:/Users/irvin/Documents/File Transfer/Codes/Web/ionic-angular/myApp/public",
         "createDefaultProgram": true
       },
       "extends": [

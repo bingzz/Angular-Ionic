@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AlertController, AlertOptions, LoadingController, NavController, ToastController } from '@ionic/angular'
+import io from 'socket.io-client'
+import { apiURL } from '../constants/constants'
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,11 @@ import { AlertController, AlertOptions, LoadingController, NavController, ToastC
 export class UserService {
   loginForm: FormGroup
   loadingDuration = 2000
+  private socket
 
   constructor (private formBuilder: FormBuilder, private navController: NavController, private alertController: AlertController, private loadingController: LoadingController, private toastController: ToastController, private router: Router) {
 
+    this.socket = io(apiURL)
     this.loginForm = formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -68,27 +72,28 @@ export class UserService {
   login() {
     if (!this.loginForm.value) return
 
-    this.loadingController.create({
-      spinner: 'circles',
-      message: 'Logging in...',
-      translucent: true,
-      backdropDismiss: false,
-    }).then(loading => {
-      loading.present()
+    this.socket.emit('login', this.loginForm.value)
+    // this.loadingController.create({
+    //   spinner: 'circles',
+    //   message: 'Logging in...',
+    //   translucent: true,
+    //   backdropDismiss: false,
+    // }).then(loading => {
+    //   loading.present()
 
-      setTimeout(() => {
-        this.router.navigate(['/home']).then(() => loading.dismiss())
-      }, this.loadingDuration)
-    }).catch((err) => {
-      this.alertController.create({
-        header: 'Login Failed',
-        message: 'Failed to Log In',
-        buttons: ['OK']
-      }).then(alert => {
-        alert.present()
-        console.error(err)
-      })
-    })
+    //   setTimeout(() => {
+    //     this.router.navigate(['/home']).then(() => loading.dismiss())
+    //   }, this.loadingDuration)
+    // }).catch((err) => {
+    //   this.alertController.create({
+    //     header: 'Login Failed',
+    //     message: 'Failed to Log In',
+    //     buttons: ['OK']
+    //   }).then(alert => {
+    //     alert.present()
+    //     console.error(err)
+    //   })
+    // })
   }
 
   logoutAlert() {
