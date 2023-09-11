@@ -73,6 +73,9 @@ export class UserService {
     if (!this.loginForm.value) return
 
     this.socket.emit('login', this.loginForm.value)
+    this.socket.on('login', (data) => {
+      console.log(data);
+    })
     // this.loadingController.create({
     //   spinner: 'circles',
     //   message: 'Logging in...',

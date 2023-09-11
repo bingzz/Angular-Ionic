@@ -4,11 +4,11 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   console.log('Error handler')
 
   const statusCode = res.statusCode || 500
-  const errorCode = err.name || 'INTERNAL SERVER ERROR'
+  const errorName = err.name || 'INTERNAL SERVER ERROR'
   const jsonObj = {
     response: 'Internal Server Error',
     error: {
-      type: errorCode,
+      type: errorName,
       code: statusCode,
       message: err.message,
     }
