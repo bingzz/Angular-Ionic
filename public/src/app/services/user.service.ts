@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AlertController, AlertOptions, LoadingController, NavController, ToastController } from '@ionic/angular'
-import io from 'socket.io-client'
+import io, { Socket } from 'socket.io-client'
 import { apiURL } from '../constants/constants'
+import { ResponseData } from '../models/models'
+import { ListenerService } from '../listener.service'
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +13,17 @@ import { apiURL } from '../constants/constants'
 export class UserService {
   loginForm: FormGroup
   loadingDuration = 2000
-  private socket
+  private socket: Socket
 
-  constructor (private formBuilder: FormBuilder, private navController: NavController, private alertController: AlertController, private loadingController: LoadingController, private toastController: ToastController, private router: Router) {
+  constructor (private formBuilder: FormBuilder, private navController: NavController, private alertController: AlertController, private loadingController: LoadingController, private toastController: ToastController, private router: Router, private listener: ListenerService) {
 
     this.socket = io(apiURL)
     this.loginForm = formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     })
+
+    this.socket.onAny(listener.listen)
   }
 
   register() {
@@ -35,26 +39,42 @@ export class UserService {
       })
   }
 
-  submitRegistration() {
-    this.loadingController.create({
-      spinner: 'circles',
+  async submitRegistration(registerForm: FormGroup) {
+
+    const loading = await this.loadingController.create({
+      spinner: 'circles'
     })
-      .then((loading) => {
-        loading.present()
 
-        this.toastController.create({
-          message: 'Successfully Registered',
-          duration: this.loadingDuration,
-          position: 'bottom',
+    try {
+      await loading.present()
+
+      this.socket
+        .emit('register', registerForm.value)
+        .on('register', async (results: ResponseData) => {
+          try {
+            await loading.dismiss()
+            this.socket.off('register')
+
+            const toast = await this.toastController.create({
+              message: results.message,
+              duration: this.loadingDuration,
+              position: 'bottom',
+            })
+
+            await toast.present()
+            if (results.created) {
+              this.router.navigate([''])
+            }
+
+          } catch (error) {
+            console.error(error)
+          }
         })
-          .then((toast) => {
-            setTimeout(() => {
-              toast.present()
-              this.router.navigate(['']).then(() => loading.dismiss())
-            }, this.loadingDuration)
-          })
-      })
-
+    } catch (error) {
+      console.error(error)
+    } finally {
+      await loading.dismiss()
+    }
   }
 
   resetForm() {
@@ -69,34 +89,49 @@ export class UserService {
       })
   }
 
-  login() {
+  async login() {
     if (!this.loginForm.value) return
 
-    this.socket.emit('login', this.loginForm.value)
-    this.socket.on('login', (data) => {
-      console.log(data);
+    const loading = await this.loadingController.create({
+      spinner: 'circles',
+      message: 'Logging in...',
+      translucent: true,
+      backdropDismiss: false,
     })
-    // this.loadingController.create({
-    //   spinner: 'circles',
-    //   message: 'Logging in...',
-    //   translucent: true,
-    //   backdropDismiss: false,
-    // }).then(loading => {
-    //   loading.present()
 
-    //   setTimeout(() => {
-    //     this.router.navigate(['/home']).then(() => loading.dismiss())
-    //   }, this.loadingDuration)
-    // }).catch((err) => {
-    //   this.alertController.create({
-    //     header: 'Login Failed',
-    //     message: 'Failed to Log In',
-    //     buttons: ['OK']
-    //   }).then(alert => {
-    //     alert.present()
-    //     console.error(err)
-    //   })
-    // })
+    try {
+      await loading.present()
+      this.socket
+        .emit('login', this.loginForm.value)
+        .on('login', async (results: ResponseData) => {
+          try {
+            this.socket.off('login')
+            if (results.code !== 200) throw new Error(results.message)
+
+            await this.router.navigate(['/home'])
+          } catch (error) {
+            const alert = await this.alertController.create({
+              header: 'Login Failed',
+              message: (error as Error).toString(),
+              buttons: ['OK']
+            })
+
+            await alert.present()
+            console.error(error)
+          }
+        })
+    } catch (error) {
+      const alert = await this.alertController.create({
+        header: 'Login Failed',
+        message: (error as Error).toString(),
+        buttons: ['OK']
+      })
+
+      await alert.present()
+      console.error(error)
+    } finally {
+      await loading.dismiss()
+    }
   }
 
   logoutAlert() {

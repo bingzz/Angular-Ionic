@@ -19,7 +19,6 @@ export class RegisterPage {
       username: ['userName', [Validators.required, Validators.minLength(3)]],
       email: ['test@email.com', [Validators.required, Validators.pattern(emailRegex)]],
       password: ['password', [Validators.required, Validators.minLength(8)]],
-      // mobile: ['', [Validators.required, Validators.pattern(mobileRegex)]]
     })
   }
 
@@ -33,8 +32,7 @@ export class RegisterPage {
       return
     }
 
-    console.log(this.registerForm.value)
-    this.userService.submitRegistration()
+    this.userService.submitRegistration(this.registerForm)
   }
 
 }

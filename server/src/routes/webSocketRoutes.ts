@@ -1,24 +1,13 @@
-import { Server, Socket } from 'socket.io'
-import { httpServer } from '..'
+import { Socket } from "socket.io"
+import { disconnected, login, register } from "./routes"
 
-export const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:8100',
-    methods: ['GET', 'POST']
-  }
-})
-
-io.use((socket, next) => {
-  console.log('middleware invoked');
-  next()
-})
-
-io.on('connection', (socket: Socket) => {
+const socketEvents = async (socket: Socket) => {
   console.log('Server Client Connected', socket.id)
 
-  socket.on('register', () => {
-    console.log('register user');
-  })
-})
+  socket.on('disconnect', disconnected)
 
-export default io
+  socket.on('login', (loginUser) => login(socket, loginUser))
+  socket.on('register', async (registerUser) => register(socket, registerUser))
+}
+
+export default socketEvents

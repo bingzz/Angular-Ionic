@@ -1,41 +1,25 @@
-import * as mongodb from 'mongodb'
-import { Song } from '../models/models'
+import mongoose, { connect, ConnectOptions } from 'mongoose'
+import { ATLAS_URI } from '..'
 
-export const collections: {
-  playlist?: mongodb.Collection<Song>
-} = {}
-
-const schemaValidation = async (db: mongodb.Db) => {
-  const jsonSchema = {
-    $jsonSchema: {
-      bsonType: 'object',
-      required: ['song'],
-      additionalProperties: false,
-      properties: {
-        _id: {},
-        name: {
-          bsonType: 'string',
-          description: `'Song' is required`,
-          minLength: 2
-        }
-      }
-    }
-  }
-
-  await db.command({
-    validator: jsonSchema
-  }).catch(async (error: mongodb.MongoServerError) => {
-    console.error(error)
-  })
+const connectOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 }
 
-export const connectDatabase = async (uri: string) => {
-  const client = new mongodb.MongoClient(uri)
-  await client.connect()
+export const dbConnect = () => {
+  connect(ATLAS_URI!, connectOptions as ConnectOptions)
+    .then(() => {
+      console.log('Connection to DB -> Success')
+    }, async (error: Error) => {
+      console.error('Failed to connect to DB:', error.message)
 
-  const db = client.db('playlist')
-  await schemaValidation(db)
-
-  const playlist = db.collection<Song>('playlist')
-  collections.playlist = playlist
+      if (error.message.includes('Collection not found')) {
+        try {
+          await mongoose.connection.createCollection('')
+          console.log('Collection created');
+        } catch (err) {
+          console.error('Failed to create collection', err)
+        }
+      }
+    })
 }

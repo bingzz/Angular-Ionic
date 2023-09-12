@@ -1,12 +1,22 @@
 import express from 'express'
+import dotenv from 'dotenv'
 import http from 'http'
-import { errorHandler, loggingHandler } from './handlers/handlers'
-import { Server, Socket } from 'socket.io'
-import router from './routes/routes'
+import { Server } from 'socket.io'
+import socketEvents from './routes/webSocketRoutes'
+import { dbConnect } from './database/database'
+dotenv.config()
+
+export const { ATLAS_URI } = process.env
+dbConnect()
+
+if (!ATLAS_URI) {
+  console.error('No Atlas URI variable defined')
+  process.exit(1)
+}
 
 const port = 3000
 const app = express()
-export const httpServer = http.createServer(http)
+export const httpServer = http.createServer(app)
 
 const io = new Server(httpServer, {
   cors: {
@@ -15,21 +25,7 @@ const io = new Server(httpServer, {
   }
 })
 
-io.on('connection', (socket: Socket) => {
-  console.log('Server Client Connected', socket.id)
-
-  socket.on('login', (user) => {
-    console.log('Login:', user)
-
-    socket.emit('login', `Hello ${user.username}`)
-  })
-})
-
-// app.use(express.json())
-// app.use(express.urlencoded({ extended: true }))
-// app.use('/api', router)
-// app.use(loggingHandler)
-// app.use(errorHandler)
+io.on('connection', socketEvents)
 
 httpServer.listen(port, () => {
   console.log('Server listening:', port)
