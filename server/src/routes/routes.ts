@@ -30,7 +30,11 @@ export async function login(socket: Socket, loginUser: User) {
     responseMsg = 'User login'
     response = {
       code: 200,
-      data: user
+      data: {
+        id: user.id,
+        email: user.email,
+        username: user.username
+      }
     }
 
     socket.emit('login', response)
@@ -92,6 +96,17 @@ export async function register(socket: Socket, registerUser: User) {
 
     socket.emit('register', response)
     logger.error('Failed to register user', { error, registerUser })
+  }
+}
+
+export async function getAlbums(socket: Socket, user: User) {
+  let response: ResponseData
+  let responseMsg: string
+
+  try {
+    
+  } catch (error) {
+
   }
 }
 

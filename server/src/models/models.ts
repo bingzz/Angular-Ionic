@@ -1,10 +1,17 @@
 import { Schema, model } from "mongoose"
 
+export interface ResponseData {
+  code: number,
+  created?: boolean,
+  message?: string
+  data?: any
+}
+
 export interface User {
   id: string
   username: string
   email: string
-  password: string
+  password?: string
 }
 
 export interface Song {
@@ -13,11 +20,10 @@ export interface Song {
   url: string
 }
 
-export interface ResponseData {
-  code: number,
-  created?: boolean,
-  message?: string
-  data?: any
+export interface AlbumPlaylist {
+  userId: string,
+  albumName: string
+  songs: Song[]
 }
 
 const UserSchema = new Schema<User>({
@@ -39,5 +45,20 @@ const SongSchema = new Schema<Song>({
   toObject: { virtuals: true }
 })
 
+const AlbumPlaylistSchema = new Schema<AlbumPlaylist>({
+  userId: { type: String, required: true },
+  albumName: { type: String, required: true },
+  songs: [{
+    id: { type: String, required: true },
+    title: { type: String, required: true },
+    url: { type: String, required: true },
+  }]
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+})
+
 export const UserModel = model<User>('User', UserSchema)
 export const SongModel = model<Song>('song', SongSchema)
+export const AlbumPlaylistModel = model<AlbumPlaylist>('albumPlaylist', AlbumPlaylistSchema)

@@ -10,3 +10,9 @@ export interface ResponseData {
   message?: string,
   data?: any
 }
+
+export interface User {
+  id: string
+  username: string
+  email: string
+}
