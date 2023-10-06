@@ -17,3 +17,21 @@ ion-item {
     width: 80px;
   }
 }
+
+ion-title {
+  text-align: center;
+}
+
+.upload-img {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  ion-img {
+    margin: auto;
+    margin-top: 1rem;
+    height: 250px;
+    width: 250px;
+    border: 1px solid gray;
+  }
+}

@@ -55,29 +55,4 @@ export class AsyncService {
   infiniteScroll(event: CustomEvent<InfiniteScrollCustomEvent>) {
 
   }
-
-  private async createAlertMessage(header: string, message: string, buttons: AlertButtons[]): Promise<HTMLIonAlertElement> {
-    return await this.alertController.create({
-      header: header,
-      message: message,
-      buttons: buttons
-    })
-  }
-
-  private async createToastMessage(message: string, duration: number, position: "top" | "bottom" | "middle" | undefined): Promise<HTMLIonToastElement> {
-    return await this.toastController.create(({
-      message: message,
-      duration: duration,
-      position: position
-    }))
-  }
-
-  private async createLoading(message: string): Promise<HTMLIonLoadingElement> {
-    return await this.loadingController.create(({
-      message: message,
-      spinner: 'circles',
-      translucent: true,
-      backdropDismiss: false
-    }))
-  }
 }

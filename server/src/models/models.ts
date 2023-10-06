@@ -1,29 +1,31 @@
-import { Schema, model } from "mongoose"
+import { Schema, model } from "mongoose";
 
 export interface ResponseData {
   code: number,
   created?: boolean,
-  message?: string
-  data?: any
+  message?: string;
+  data?: any;
 }
 
 export interface User {
-  id: string
-  username: string
-  email: string
-  password?: string
+  id: string;
+  username: string;
+  email: string;
+  password?: string;
+  token?: string;
 }
 
 export interface Song {
-  id: string
-  title: string
-  url: string
+  id: string;
+  title: string;
+  url: string;
 }
 
-export interface AlbumPlaylist {
+export interface Album {
+  id: string,
   userId: string,
-  albumName: string
-  songs: Song[]
+  name: string;
+  img?: string;
 }
 
 const UserSchema = new Schema<User>({
@@ -34,7 +36,7 @@ const UserSchema = new Schema<User>({
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
-})
+});
 
 const SongSchema = new Schema<Song>({
   title: { type: String, required: true },
@@ -43,22 +45,19 @@ const SongSchema = new Schema<Song>({
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
-})
+});
 
-const AlbumPlaylistSchema = new Schema<AlbumPlaylist>({
+const AlbumSchema = new Schema<Album>({
+  id: { type: String, required: true },
   userId: { type: String, required: true },
-  albumName: { type: String, required: true },
-  songs: [{
-    id: { type: String, required: true },
-    title: { type: String, required: true },
-    url: { type: String, required: true },
-  }]
+  name: { type: String, required: true },
+  img: { type: Buffer, required: false }
 }, {
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
-})
+});
 
-export const UserModel = model<User>('User', UserSchema)
-export const SongModel = model<Song>('song', SongSchema)
-export const AlbumPlaylistModel = model<AlbumPlaylist>('albumPlaylist', AlbumPlaylistSchema)
+export const UserModel = model<User>('user', UserSchema);
+export const SongModel = model<Song>('song', SongSchema);
+export const AlbumModel = model<Album>('album', AlbumSchema);

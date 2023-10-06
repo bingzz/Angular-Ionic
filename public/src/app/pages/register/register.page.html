@@ -7,42 +7,36 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding">
   <form [formGroup]="registerForm" (submit)="register()">
 
-    <ion-item lines="full">
-      <ion-input tabindex="1" type="email" labelPlacement="floating" label="Email" formControlName="email"></ion-input>
-    </ion-item>
-    <div *ngIf="errorControl['email'].touched && errorControl['email'].invalid">
-      <div class="ion-padding" *ngIf="errorControl['email'].errors?.['required']">
-        <ion-text color="danger">Email is required.</ion-text>
-      </div>
-      <div class="ion-padding" *ngIf="errorControl['email'].errors?.['pattern']">
-        <ion-text color="danger">Provide a valid Email.</ion-text>
+    <div class="item-container">
+      <ion-item>
+        <ion-input tabindex="1" type="email" labelPlacement="floating" label="Email" formControlName="email"></ion-input>
+      </ion-item>
+      <div class="small-label ion-padding-start" *ngIf="errorControl['email'].touched && errorControl['email'].invalid">
+        <ion-text color="danger" *ngIf="errorControl['email'].errors?.['required']">Email is required.</ion-text>
+        <ion-text color="danger" *ngIf="errorControl['email'].errors?.['pattern']">Provide a valid Email.</ion-text>
       </div>
     </div>
 
-    <ion-item lines="full">
-      <ion-input tabindex="2" type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
-    </ion-item>
-    <div *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
-      <div class="ion-padding" *ngIf="errorControl['username'].errors?.['required']">
-        <ion-text color="danger">Username is required.</ion-text>
-      </div>
-      <div class="ion-padding" *ngIf="registerForm.get('username')?.errors?.['minlength']">
-        <ion-text color="danger">Username must be 3 characters long.</ion-text>
+    <div class="item-container">
+      <ion-item>
+        <ion-input tabindex="2" type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
+      </ion-item>
+      <div class="small-label ion-padding-start" *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
+        <ion-text color="danger" *ngIf="errorControl['username'].errors?.['required']">Username is required.</ion-text>
+        <ion-text color="danger" *ngIf="registerForm.get('username')?.errors?.['minlength']">Username must be 3 characters long.</ion-text>
       </div>
     </div>
 
-    <ion-item lines="full">
-      <ion-input tabindex="3" type="password" label="Password" labelPlacement="floating" formControlName="password"></ion-input>
-    </ion-item>
-    <div *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
-      <div class="ion-padding" *ngIf="errorControl['password'].errors?.['required']">
-        <ion-text color="danger">Password is required.</ion-text>
-      </div>
-      <div class="ion-padding" *ngIf="registerForm.get('password')?.errors?.['minlength']">
-        <ion-text color="danger">Password must be 8 characters long.</ion-text>
+    <div class="item-container">
+      <ion-item>
+        <ion-input tabindex="3" type="password" label="Password" labelPlacement="floating" formControlName="password"></ion-input>
+      </ion-item>
+      <div class="small-label ion-padding-start" *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
+        <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">Password is required.</ion-text>
+        <ion-text color="danger" *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be 8 characters long.</ion-text>
       </div>
     </div>
 

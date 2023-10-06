@@ -6,8 +6,9 @@
   <ion-refresher slot="fixed" (ionRefresh)="refreshAlbums($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <p>{{(albums$ | async)?.length}}</p>
   <ion-list class="album-list">
-    <ion-item button *ngFor="let album of albums" (click)="selectAlbum(album)">
+    <ion-item button *ngFor="let album of albums$ | async" (click)="selectAlbum(album)">
       <ion-skeleton-text slot="start" animated="true" class="album-img" *ngIf="!album.img"></ion-skeleton-text>
       <ion-img slot="start" [src]="album.img" [alt]="album.name" *ngIf="album.img"></ion-img>
       <ion-label>{{ album.name }}</ion-label>
@@ -16,8 +17,39 @@
     <ion-item *ngIf="notFound">
       <ion-label class="ion-text-center">Album not found</ion-label>
     </ion-item>
-    <ion-item *ngIf="!albums.length">
+    <ion-item *ngIf="!(albums$ | async)?.length">
       <ion-label class="ion-text-center">No Albums found</ion-label>
     </ion-item>
   </ion-list>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="add-album">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal trigger="add-album" (willDismiss)="dismissCreateAlbum($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelAddAlbum()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Add Album</ion-title>
+          <ion-buttons slot="end">
+            <ion-button strong="true" (click)="addAlbum()">Add</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="albumForm">
+          <ion-item>
+            <ion-input tabindex="1" type="text" label="Album Name" formControlName="albumName"></ion-input>
+          </ion-item>
+          <div class="ion-text-center upload-img">
+            <ion-button>Upload Image</ion-button>
+            <ion-img [src]="albumForm.get('img')?.value" alt="" />
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

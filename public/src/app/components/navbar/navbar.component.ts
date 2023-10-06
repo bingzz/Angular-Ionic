@@ -4,9 +4,9 @@ import { filter, map } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 
 interface Nav {
-  navigate: string
-  name: string
-  title: string
+  navigate: string;
+  name: string;
+  title: string;
 }
 
 @Component({
@@ -15,8 +15,8 @@ interface Nav {
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  activePage: string
-  loadingDuration = 2000
+  activePage: string;
+  loadingDuration = 2000;
 
   navigation: Nav[] = [
     {
@@ -39,25 +39,25 @@ export class NavbarComponent implements OnInit {
       name: 'search',
       title: 'Search'
     },
-  ]
+  ];
 
-  constructor(private router: Router, private userService: UserService) {
-    this.activePage = router.url.split('/').pop() ?? ''
+  constructor (private router: Router, private userService: UserService) {
+    this.activePage = router.url.split('/').pop() ?? '';
   }
 
   navigateToPage(url: string) {
-    if (!url) return
+    if (!url) return;
 
-    this.activePage = url
-    this.router.navigate([`/home/${url}`])
+    this.activePage = url;
+    this.router.navigate([`/home/${url}`]);
   }
 
   setCurrentPage(path: string): string {
-    return path === this.activePage ? 'primary' : ''
+    return path === this.activePage ? 'primary' : '';
   }
 
   logout() {
-    this.userService.logoutAlert()
+    this.userService.logout();
   }
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class NavbarComponent implements OnInit {
       filter(event => event instanceof NavigationEnd),
       map(() => this.router.url.split('/').pop())
     ).subscribe(currentPath => {
-      this.activePage = currentPath ?? ''
-    })
+      this.activePage = currentPath ?? '';
+    });
   }
 }

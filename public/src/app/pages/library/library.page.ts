@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { RefresherCustomEvent } from '@ionic/angular'
-import { Album } from 'src/app/models/models'
-import { AsyncService } from 'src/app/services/async.service'
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonModal, RefresherCustomEvent } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { Album } from 'src/app/models/models';
+import { AsyncService } from 'src/app/services/async.service';
+import { DataService } from 'src/app/services/data.service';
+import { OverlayEventDetail } from '@ionic/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-library',
@@ -10,50 +14,63 @@ import { AsyncService } from 'src/app/services/async.service'
   styleUrls: ['./library.page.scss'],
 })
 export class LibraryPage implements OnInit {
-  baseAlbums: Album[] = []
-  albums: Album[] = []
-  notFound: boolean = false
+  baseAlbums: Album[] = [];
+  albums: Album[] = [];
+  notFound: boolean = false;
+  albums$: Observable<Album[]>;
+  albumForm: FormGroup;
 
-  constructor (private asyncService: AsyncService, private router: Router) { }
+  @ViewChild(IonModal) addAlbumModal!: IonModal;
+
+  constructor (private asyncService: AsyncService, private router: Router, private dataService: DataService, private formBuilder: FormBuilder) {
+    this.albums$ = dataService.albums$.asObservable();
+
+    this.albumForm = this.formBuilder.group({
+      albumName: ['', Validators.required],
+      img: null
+    });
+  }
 
   generateAlbums() {
-    const count = this.baseAlbums.length + 1
+    const count = this.baseAlbums.length + 1;
 
     for (let i = 0; i < 20; i++) {
       this.baseAlbums.push({
         id: `${count + i}`,
         name: 'Album ' + (count + i),
         img: 'https://picsum.photos/150/150?random=' + i
-      })
+      });
     }
 
-    this.albums = this.baseAlbums
+    this.albums = this.baseAlbums;
   }
 
   refreshAlbums(event: Event) {
-    const ev = event as RefresherCustomEvent
+    const ev = event as RefresherCustomEvent;
 
     setTimeout(() => {
-      this.generateAlbums()
-      ev.target.complete()
+      this.generateAlbums();
+      ev.target.complete();
 
-      console.log('Albums refreshed')
-    }, 1500)
+      console.log('Albums refreshed');
+    }, 1500);
   }
 
   filterAlbums(event: Event) {
-    const value = (event.target as HTMLInputElement).value.toLowerCase().trim() ?? ''
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim() ?? '';
 
-    this.albums = this.baseAlbums.filter(album => album.name.toLowerCase().indexOf(value) > -1)
+    this.albums = this.baseAlbums.filter(album => album.name.toLowerCase().indexOf(value) > -1);
   }
 
   selectAlbum(album: Album) {
-    // redirect to this url /home/library/<album_name>
-    if (!Object.keys(album).length) return
+    console.log(album);
 
-    this.router.navigate(['/home/library/', `${album.id}/`], {
-      queryParams: album
-    })
+    // redirect to this url /home/library/<album_name>
+    // if (!Object.keys(album).length) return;
+
+    // this.router.navigate(['/home/library/', `${album.id}/`], {
+    //   queryParams: album
+    // });
   }
 
   deleteAlbum(album: string) {
@@ -64,7 +81,20 @@ export class LibraryPage implements OnInit {
 
   }
 
+  dismissCreateAlbum(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+  }
+
+  cancelAddAlbum() {
+    this.addAlbumModal.dismiss(null, 'cancel');
+  }
+
+  addAlbum() {
+    this.addAlbumModal.dismiss(null, 'confirm');
+    this.dataService.addUserAlbum();
+  }
+
   ngOnInit(): void {
-    this.generateAlbums()
+    // this.dataService.getUserAlbums();
   }
 }

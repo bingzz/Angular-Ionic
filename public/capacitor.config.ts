@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'push.notif.android',
   appName: 'myApp',
   webDir: 'www',
   server: {
@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
   },
   plugins: {
     PushNotifications: {
-      presentationsOptions: ['badge', 'sound', 'alert']
+      presentationOptions: ['badge', 'sound', 'alert']
     }
   }
 };

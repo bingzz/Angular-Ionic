@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { FormGroup } from '@angular/forms'
-import { UserService } from 'src/app/services/user.service'
+import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/notification.service';
+import { OverlayService } from 'src/app/services/overlay.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -8,25 +11,37 @@ import { UserService } from 'src/app/services/user.service'
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  loginForm: FormGroup
+  loginForm: FormGroup;
 
-  constructor (private userService: UserService) {
-    this.loginForm = userService.loginForm
+  constructor (private userService: UserService, private notification: NotificationService, private overlayService: OverlayService, private router: Router) {
+    this.notification.checkPlatform();
+    this.loginForm = userService.loginForm;
   }
 
   get errorControl() {
-    return this.loginForm.controls
+    return this.loginForm.controls;
   }
 
   onSubmit() {
-    this.userService.login()
+    this.userService.login();
   }
 
-  clear() {
-    this.userService.resetForm()
+  async clear() {
+    const toast = await this.overlayService.createToast('Login Cleared');
+    toast.present();
+    this.loginForm.reset();
   }
 
-  register() {
-    this.userService.register()
+  async register() {
+    try {
+      const loading = await this.overlayService.createLoading();
+      loading.present();
+
+      setTimeout(() => {
+        this.router.navigate(['/register']).then(() => loading.dismiss());
+      }, this.overlayService.overlayDuration);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

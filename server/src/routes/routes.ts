@@ -1,112 +1,117 @@
-import { Socket } from "socket.io"
-import { ResponseData, User, UserModel } from "../models/models"
-import { logger } from "../handlers/handlers"
+import { Socket } from "socket.io";
+import { ResponseData, User, UserModel } from "../models/models";
+import { generateTokenResponse, logger } from "../handlers/handlers";
 
 // disconnect
 export async function disconnected() {
-  console.log('Server Client Disconnected')
+  console.log('Server Client Disconnected');
 }
 
 export async function login(socket: Socket, loginUser: User) {
-  let response: ResponseData
-  let responseMsg: string
+  let response: ResponseData;
+  let responseMsg: string;
 
   try {
-    const { username, password } = loginUser
-    const user = await UserModel.findOne({ username, password })
+    const { username, password } = loginUser;
+    const user = await UserModel.findOne({ username, password });
 
     if (!user) {
-      responseMsg = 'Username does not exist'
+      responseMsg = 'Username does not exist';
       response = {
         code: 404,
         message: responseMsg
-      }
+      };
 
-      socket.emit('login', response)
-      logger.warn(responseMsg, loginUser)
-      return
+      socket.emit(login.name, response);
+      logger.warn(responseMsg, loginUser);
+      return;
     }
 
-    responseMsg = 'User login'
+    responseMsg = 'User login';
+    
+    const token = generateTokenResponse(user.id);
+
+    if (!token) {
+      responseMsg = 'JWT key is missing';
+      response = {
+        code: 404,
+        message: 'Server is not available at this time.'
+      };
+
+      socket.emit(login.name, response);
+      logger.info(responseMsg, loginUser);
+      return;
+    }
+
     response = {
       code: 200,
       data: {
         id: user.id,
         email: user.email,
-        username: user.username
+        username: user.username,
+        token: token
       }
-    }
+    };
 
-    socket.emit('login', response)
-    logger.info(responseMsg, loginUser)
+    socket.emit(login.name, response);
+    logger.info(responseMsg, loginUser);
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
-    responseMsg = error as string
+    responseMsg = error as string;
     response = {
       code: 500,
       message: 'Failed to log in'
-    }
+    };
 
-    socket.emit('login', response)
-    logger.error('Failed to Login', { error, loginUser })
+    socket.emit(login.name, response);
+    logger.error('Failed to Login', { error, loginUser });
   }
 }
 
 export async function register(socket: Socket, registerUser: User) {
-  let response: ResponseData
-  let responseMsg: string
+  let response: ResponseData;
+  let responseMsg: string;
 
   try {
-    const { email, password } = registerUser
-    const user = await UserModel.findOne({ email, password })
+    const { email, password } = registerUser;
+    const user = await UserModel.findOne({ email, password });
 
     if (!user) {
-      await UserModel.create(registerUser)
-      responseMsg = 'User Successfully created'
+      await UserModel.create(registerUser);
+      responseMsg = 'User Successfully created';
       response = {
         code: 201,
         created: true,
         message: responseMsg
-      }
+      };
 
-      socket.emit('register', response)
-      logger.info(responseMsg, registerUser)
-      return
+      socket.emit(register.name, response);
+      logger.info(responseMsg, registerUser);
+      return;
     }
 
-    responseMsg = 'User already exists'
+    responseMsg = 'User already exists';
     response = {
       code: 409,
       created: false,
       message: responseMsg
-    }
+    };
 
-    socket.emit('register', response)
-    logger.warn(responseMsg, registerUser)
+    socket.emit(register.name, response);
+    logger.warn(responseMsg, registerUser);
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
-    responseMsg = error as string
+    responseMsg = error as string;
     response = {
       code: 500,
       created: false,
       message: responseMsg
-    }
+    };
 
-    socket.emit('register', response)
-    logger.error('Failed to register user', { error, registerUser })
-  }
-}
-
-export async function getAlbums(socket: Socket, user: User) {
-  let response: ResponseData
-  let responseMsg: string
-
-  try {
-    
-  } catch (error) {
-
+    socket.emit(register.name, response);
+    logger.error('Failed to register user', { error, registerUser });
   }
 }
 
