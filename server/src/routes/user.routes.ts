@@ -28,7 +28,7 @@ export async function login(socket: Socket, loginUser: User) {
     }
 
     responseMsg = 'User login';
-    
+
     const token = generateTokenResponse(user.id);
 
     if (!token) {
@@ -74,32 +74,34 @@ export async function register(socket: Socket, registerUser: User) {
   let responseMsg: string;
 
   try {
-    const { email, password } = registerUser;
-    const user = await UserModel.findOne({ email, password });
+    const { email, username } = registerUser;
+    const user = await UserModel.find({ email: email, username: username });
 
-    if (!user) {
-      await UserModel.create(registerUser);
-      responseMsg = 'User Successfully created';
+    console.log(user);
+    
+    if (!!user.length) {
+      responseMsg = 'User or Email already exists';
       response = {
-        code: 201,
-        created: true,
+        code: 409,
+        created: false,
         message: responseMsg
       };
 
       socket.emit(register.name, response);
-      logger.info(responseMsg, registerUser);
+      logger.warn(responseMsg, registerUser);
       return;
     }
 
-    responseMsg = 'User already exists';
+    await UserModel.create(registerUser);
+    responseMsg = 'User Successfully created';
     response = {
-      code: 409,
-      created: false,
+      code: 201,
+      created: true,
       message: responseMsg
     };
 
     socket.emit(register.name, response);
-    logger.warn(responseMsg, registerUser);
+    logger.info(responseMsg, registerUser);
   } catch (error) {
     console.error(error);
 

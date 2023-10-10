@@ -1,9 +1,10 @@
 import { Socket } from "socket.io";
-import { disconnected, login, register } from "./routes";
-import * as library from './libraryRoutes';
 import { ResponseData } from "../models/models";
 
-const requestDelay = 2000;
+import * as library from './library.routes';
+import * as user from './user.routes';
+
+const requestDelay = 1500;
 let response: ResponseData;
 
 async function socketEvents(socket: Socket) {
@@ -32,13 +33,18 @@ async function socketEvents(socket: Socket) {
     }, requestDelay);
   });
 
-  // 
-  socket.on('disconnect', disconnected);
-  socket.on('login', async (loginUser) => login(socket, loginUser));
-  socket.on('register', async (registerUser) => register(socket, registerUser));
+  // User
+  socket.on('disconnect', user.disconnected);
+  socket.on('login', async (loginUser) => user.login(socket, loginUser));
+  socket.on('register', async (registerUser) => user.register(socket, registerUser));
 
   // Library
   socket.on('getAlbums', async (user) => library.getAlbums(socket, user));
+  socket.on('addAlbum', async (album, user) => library.addAlbum(socket, album, user));
+
+  // Search
+
+  // Play
 }
 
 export default socketEvents;

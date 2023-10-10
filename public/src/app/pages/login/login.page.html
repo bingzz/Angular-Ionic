@@ -2,26 +2,39 @@
   <ion-content [fullscreen]="true">
     <h1 class="ion-padding">Test App</h1>
     <div class="login-form">
-      <form [formGroup]="loginForm" (submit)="onSubmit()">
-        <ion-item lines="full">
-          <ion-input type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
-        </ion-item>
-        <div class="error-msg" *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
-          <ion-text color="danger" *ngIf="errorControl['username'].errors?.['required']">Username is
-            required.</ion-text>
+      <form [formGroup]="loginForm" (submit)="login()">
+        <div class="item-container">
+          <ion-item>
+            <ion-input type="text" labelPlacement="floating" label="Username" formControlName="username"></ion-input>
+          </ion-item>
+          <div class="small-label ion-padding-start"
+            *ngIf="errorControl['username'].touched && errorControl['username'].invalid">
+            <ion-text color="danger" *ngIf="errorControl['username'].errors?.['required']">Username is
+              required.</ion-text>
+            <ion-text color="danger" *ngIf="errorControl['username']?.errors?.['minlength']">Username must be 3
+              characters long.</ion-text>
+          </div>
         </div>
-        <ion-item lines="full">
-          <ion-input label="Password" type="password" labelPlacement="floating" formControlName="password"></ion-input>
-        </ion-item>
-        <div class="error-msg" *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
-          <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">Password is
-            required.</ion-text>
+        <div class="item-container">
+          <ion-item>
+            <ion-input label="Password" type="password" labelPlacement="floating"
+              formControlName="password"></ion-input>
+          </ion-item>
+          <div class="small-label ion-padding-start"
+            *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
+            <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">Password is
+              required.</ion-text>
+            <ion-text color="danger" *ngIf="errorControl['password']?.errors?.['minlength']">Password must be 8
+              characters
+              long.</ion-text>
+          </div>
         </div>
         <ion-button expand="block" type="submit" fill="outline" [disabled]="!loginForm.valid">Log In</ion-button>
         <ion-button expand="full" buttonType="button" fill="clear" (click)="clear()">Clear</ion-button>
       </form>
     </div>
-
+    <ion-button class="ion-text-center" expand="block" (click)="testPushNotification()">Test Push
+      Notification</ion-button>
   </ion-content>
   <ion-footer>
     <ion-toolbar>

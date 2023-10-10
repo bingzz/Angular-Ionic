@@ -16,6 +16,7 @@ interface Nav {
 })
 export class NavbarComponent implements OnInit {
   activePage: string;
+  userName: string = 'N/A';
   loadingDuration = 2000;
 
   navigation: Nav[] = [
@@ -43,6 +44,19 @@ export class NavbarComponent implements OnInit {
 
   constructor (private router: Router, private userService: UserService) {
     this.activePage = router.url.split('/').pop() ?? '';
+
+    this.userService.user$.subscribe((user) => {
+      this.userName = user.username;
+    });
+  }
+
+  ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.router.url.split('/').pop())
+    ).subscribe(currentPath => {
+      this.activePage = currentPath ?? '';
+    });
   }
 
   navigateToPage(url: string) {
@@ -58,14 +72,5 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.userService.logout();
-  }
-
-  ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => this.router.url.split('/').pop())
-    ).subscribe(currentPath => {
-      this.activePage = currentPath ?? '';
-    });
   }
 }

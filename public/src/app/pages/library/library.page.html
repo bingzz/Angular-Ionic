@@ -1,25 +1,40 @@
 <ion-content class="ion-padding">
-  <h1>Album Library</h1>
+  <h1>Library</h1>
   <ion-header class="sticky-searchbar">
-    <ion-searchbar placeholder="Search Album" debounce="300" (ionInput)="filterAlbums($event)"></ion-searchbar>
+    <ion-searchbar placeholder="Search Album" (ionInput)="searchAlbums($event)"></ion-searchbar>
   </ion-header>
   <ion-refresher slot="fixed" (ionRefresh)="refreshAlbums($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <p>{{(albums$ | async)?.length}}</p>
   <ion-list class="album-list">
-    <ion-item button *ngFor="let album of albums$ | async" (click)="selectAlbum(album)">
-      <ion-skeleton-text slot="start" animated="true" class="album-img" *ngIf="!album.img"></ion-skeleton-text>
-      <ion-img slot="start" [src]="album.img" [alt]="album.name" *ngIf="album.img"></ion-img>
-      <ion-label>{{ album.name }}</ion-label>
-      <ion-icon slot="end" name="arrow-forward"></ion-icon>
-    </ion-item>
-    <ion-item *ngIf="notFound">
-      <ion-label class="ion-text-center">Album not found</ion-label>
-    </ion-item>
-    <ion-item *ngIf="!(albums$ | async)?.length">
-      <ion-label class="ion-text-center">No Albums found</ion-label>
-    </ion-item>
+
+    <div *ngIf="!loaded">
+      <ion-item *ngFor="let _ of skeletonItems">
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text animated="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <ion-skeleton-text animated="true" style="width: 80%;"></ion-skeleton-text>
+          <ion-skeleton-text animated="true" style="width: 35%;"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngIf="loaded">
+      <ion-item button *ngFor="let album of albums$ | async" (click)="selectAlbum(album)">
+        <ion-skeleton-text slot="start" animated="true" class="album-img" *ngIf="!album.img"></ion-skeleton-text>
+        <ion-img slot="start" [src]="album.img" [alt]="album.albumName" *ngIf="album.img"></ion-img>
+        <ion-label>{{ album.albumName }}</ion-label>
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="notFound">
+        <ion-label class="ion-text-center">Album not found</ion-label>
+      </ion-item>
+      <ion-item *ngIf="!(albums$ | async)?.length">
+        <ion-label class="ion-text-center">No Albums found</ion-label>
+      </ion-item>
+    </div>
+
   </ion-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="add-album">
     <ion-fab-button>
@@ -35,7 +50,7 @@
           </ion-buttons>
           <ion-title>Add Album</ion-title>
           <ion-buttons slot="end">
-            <ion-button strong="true" (click)="addAlbum()">Add</ion-button>
+            <ion-button strong="true" (click)="addAlbum()" [disabled]="!albumForm.valid">Add</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

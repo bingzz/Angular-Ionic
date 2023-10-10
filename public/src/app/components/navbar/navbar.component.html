@@ -1,7 +1,7 @@
 <ion-menu contentId="main-content">
   <ion-header translucent="true" collapse="true">
     <ion-toolbar>
-      <ion-title>Options</ion-title>
+      <ion-title>Welcome, {{ userName }}</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -18,11 +18,7 @@
     <ion-list>
       <ion-menu-toggle autoHide="false">
         <ion-item button (click)="logout()">
-          <ion-icon
-            slot="start"
-            name="log-out-outline"
-            color="danger"
-          ></ion-icon>
+          <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
           <ion-label color="danger">Logout</ion-label>
         </ion-item>
       </ion-menu-toggle>

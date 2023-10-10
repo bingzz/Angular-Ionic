@@ -22,14 +22,13 @@ export interface Song {
 }
 
 export interface Album {
-  id: string,
   userId: string,
-  name: string;
-  img?: string;
+  albumName: string;
+  img?: any;
 }
 
 const UserSchema = new Schema<User>({
-  username: { type: String, required: true },
+  username: { type: String, required: true, minlength: 3, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 8 },
 }, {
@@ -48,9 +47,8 @@ const SongSchema = new Schema<Song>({
 });
 
 const AlbumSchema = new Schema<Album>({
-  id: { type: String, required: true },
   userId: { type: String, required: true },
-  name: { type: String, required: true },
+  albumName: { type: String, required: true },
   img: { type: Buffer, required: false }
 }, {
   timestamps: true,

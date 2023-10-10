@@ -1,7 +1,7 @@
 export interface Album {
   id: string,
-  name: string,
-  img: string;
+  albumName: string,
+  img?: any;
 }
 
 export interface ResponseData {
@@ -16,4 +16,10 @@ export interface User {
   email: string;
   username: string;
   token: string;
+}
+
+export interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
 }
