@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { Nav } from 'src/app/models/models';
 import { UserService } from 'src/app/services/user.service';
-
-interface Nav {
-  navigate: string;
-  name: string;
-  title: string;
-}
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +11,7 @@ interface Nav {
 })
 export class NavbarComponent implements OnInit {
   activePage: string;
-  userName: string = 'N/A';
+  userName: string = '';
   loadingDuration = 2000;
 
   navigation: Nav[] = [
@@ -46,7 +41,7 @@ export class NavbarComponent implements OnInit {
     this.activePage = router.url.split('/').pop() ?? '';
 
     this.userService.user$.subscribe((user) => {
-      this.userName = user.username;
+      this.userName = user.username || 'N/A';
     });
   }
 

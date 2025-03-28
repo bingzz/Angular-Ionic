@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { emailRegex } from 'src/app/constants/constants';
 import { ResponseData } from 'src/app/models/models';
 import { ListenerService } from 'src/app/services/listener.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { OverlayService } from 'src/app/services/overlay.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { UserService } from 'src/app/services/user.service';
@@ -18,7 +17,7 @@ export class RegisterPage {
   registerForm: FormGroup;
   defaultHref = '/';
 
-  constructor (private userService: UserService, private formBuilder: FormBuilder, private overlayService: OverlayService, private notification: NotificationService, private socket: SocketService, private router: Router, private listener: ListenerService) {
+  constructor (private userService: UserService, private formBuilder: FormBuilder, private overlayService: OverlayService, private socket: SocketService, private router: Router, private listener: ListenerService) {
     this.socket.socketIO().onAny(this.listener.listen);
 
     this.registerForm = this.formBuilder.group({

@@ -23,3 +23,9 @@ export interface LocalFile {
   path: string;
   data: string;
 }
+
+export interface Nav {
+  navigate: string;
+  name: string;
+  title: string;
+}

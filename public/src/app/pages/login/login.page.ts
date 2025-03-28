@@ -87,6 +87,6 @@ export class LoginPage {
 
   testPushNotification() {
     console.log('Push notification');
-    this.notification.pushNotificationTest()
+    // this.notification.pushNotificationTest()
   }
 }
